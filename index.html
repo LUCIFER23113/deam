@@ -3,8 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <title>Binary Converter</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #4caf50;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        p {
+            margin: 0;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -23,112 +78,110 @@
         
         <button onclick="convert()">Convert</button>
         
-        <p id="result"></p>
+        <p id="result"></p>     
     </div>
+
+    <script>
+        function convert() {
+            var binaryInput = document.getElementById("binaryInput").value;
+            var conversionType = document.getElementById("conversionType").value;
+
+            if (!/^[01]+$/.test(binaryInput)) {
+                alert("Please enter a valid binary number (0s and 1s only).");
+                return;
+            }
+
+            var result;
+            switch (conversionType) {
+                case "toGray":
+                    result = binaryToGray(binaryInput);
+                    break;
+                case "toBinary":
+                    result = grayToBinary(binaryInput);
+                    break;
+                case "bcdToExcess3":
+                    result = bcdToExcess3(binaryInput);
+                    break;
+                case "excess3ToBCD":
+                    result = excess3ToBCD(binaryInput);
+                    break;
+                default:
+                    result = "Invalid conversion type";
+            }
+
+            // Display the result
+            document.getElementById("result").innerText = "Result: " + result;
+        }
+
+        function binaryToGray(binaryInput) {
+            var grayCode = '';
+            grayCode += binaryInput[0];
+
+            for (var i = 1; i < binaryInput.length; i++) {
+                grayCode += (parseInt(binaryInput[i - 1]) + parseInt(binaryInput[i])) % 2;
+            }
+
+            return grayCode;
+        }
+
+        function grayToBinary(grayInput) {
+            var binaryCode = '';
+            binaryCode += grayInput[0];
+
+            for (var i = 1; i < grayInput.length; i++) {
+                binaryCode += (parseInt(binaryCode[i - 1]) + parseInt(grayInput[i])) % 2;
+            }
+
+            return binaryCode;
+        }
+
+        function bcdToExcess3(bcdInput) {
+            // Convert each BCD digit to Excess-3 and concatenate the results
+            var excess3Result = '';
+            var v1 = '1000';
+            var v2 = '1001';
+            if(bcdInput == v1) {
+                return excess3Result = '1011';
+            }
+            if(bcdInput == v2) {
+                return excess3Result = '1100';
+            }
+            for (var i = 0; i < bcdInput.length; i += 4) {
+                // Extract each BCD digit (4 bits)
+                var bcdDigit = bcdInput.substring(i, i + 4);
+
+                // Convert BCD to decimal
+                var decimalDigit = parseInt(bcdDigit, 2);
+
+                // Add 3 to the decimal digit to get Excess-3
+                var excess3Digit = (decimalDigit + 3) % 10;
+
+                // Convert Excess-3 to 4-bit binary
+                var binaryDigit = ('0000' + excess3Digit.toString(2)).slice(-4);
+
+                excess3Result += binaryDigit;
+            }
+
+            return excess3Result;
+        }
+
+        function excess3ToBCD(excess3Input) {
+            // Subtract 3 from each 4-bit binary group and convert to BCD
+            var bcdResult = '';
+            for (var i = 0; i < excess3Input.length; i += 4) {
+                var excess3Digit = excess3Input.substr(i, 4);
+                
+                // Subtract 3 from the 4-bit binary
+                var binaryDigit = (parseInt(excess3Digit, 2) - 3).toString(2);
+
+                // Ensure the result is 4 bits long
+                binaryDigit = ('0000' + binaryDigit).slice(-4);
+
+                bcdResult += binaryDigit;
+            }
+
+            return bcdResult;
+        }
+    </script>
 </body>
 </html>
-    <scripts>
-        function convert() {
-    var binaryInput = document.getElementById("binaryInput").value;
-    var conversionType = document.getElementById("conversionType").value;
-
-
-    if (!/^[01]+$/.test(binaryInput)) {
-        alert("Please enter a valid binary number (0s and 1s only).");
-        return;
-    }
-
-    var result;
-    switch (conversionType) {
-        case "toGray":
-            result = binaryToGray(binaryInput);
-            break;
-        case "toBinary":
-            result = grayToBinary(binaryInput);
-            break;
-        case "bcdToExcess3":
-            result = bcdToExcess3(binaryInput);
-            break;
-        case "excess3ToBCD":
-            result = excess3ToBCD(binaryInput);
-            break;
-        default:
-            result = "Invalid conversion type";
-    }
-
-    // Display the result
-    document.getElementById("result").innerText = "Result: " + result;
-}
-
-function binaryToGray(binaryInput) {
-    var grayCode = '';
-    grayCode += binaryInput[0];
-
-    for (var i = 1; i < binaryInput.length; i++) {
-        grayCode += (parseInt(binaryInput[i - 1]) + parseInt(binaryInput[i])) % 2;
-    }
-
-    return grayCode;
-}
-
-function grayToBinary(grayInput) {
-    var binaryCode = '';
-    binaryCode += grayInput[0];
-
-    for (var i = 1; i < grayInput.length; i++) {
-        binaryCode += (parseInt(binaryCode[i - 1]) + parseInt(grayInput[i])) % 2;
-    }
-
-    return binaryCode;
-}
-
-function bcdToExcess3(bcdInput) {
-    // Convert each BCD digit to Excess-3 and concatenate the results
-    var excess3Result = '';
-    var v1 = '1000';
-    var v2 = '1001';
-    if(bcdInput == v1) {
-        return excess3Result = '1011';
-    }
-    if(bcdInput == v2) {
-        return excess3Result = '1100';
-    }
-    for (var i = 0; i < bcdInput.length; i += 4) {
-        // Extract each BCD digit (4 bits)
-        var bcdDigit = bcdInput.substring(i, i + 4);
-
-        // Convert BCD to decimal
-        var decimalDigit = parseInt(bcdDigit, 2);
-
-        // Add 3 to the decimal digit to get Excess-3
-        var excess3Digit = (decimalDigit + 3) % 10;
-
-        // Convert Excess-3 to 4-bit binary
-        var binaryDigit = ('0000' + excess3Digit.toString(2)).slice(-4);
-
-        excess3Result += binaryDigit;
-    }
-
-    return excess3Result;
-}
-
-
-
-function excess3ToBCD(excess3Input) {
-    // Subtract 3 from each 4-bit binary group and convert to BCD
-    var bcdResult = '';
-    for (var i = 0; i < excess3Input.length; i += 4) {
-        var excess3Digit = excess3Input.substr(i, 4);
-        
-        // Subtract 3 from the 4-bit binary
-        var binaryDigit = (parseInt(excess3Digit, 2) - 3).toString(2);
-
-        // Ensure the result is 4 bits long
-        binaryDigit = ('0000' + binaryDigit).slice(-4);
-
-        bcdResult += binaryDigit;
-    }
-
-    return bcdResult;
-}
-    </scripts>
