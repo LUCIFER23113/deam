@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="convert.css">
+    <script src="convert.js"></script>
+    <title>Binary Converter</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Binary Converter</h1>
+        
+        <label for="binaryInput">Enter Binary:</label>
+        <input type="text" id="binaryInput">
+        
+        <label for="conversionType">Select Conversion:</label>
+        <select id="conversionType">
+            <option value="toGray">Binary to Gray Code</option>
+            <option value="toBinary">Gray Code to Binary</option>
+            <option value="bcdToExcess3">BCD to Excess-3</option>
+            <option value="excess3ToBCD">Excess-3 to BCD</option>
+        </select>
+        
+        <button onclick="convert()">Convert</button>
+        
+        <p id="result"></p>
+    </div>
+</body>
+</html>
